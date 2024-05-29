@@ -8,6 +8,8 @@ const AppDataSource = new DataSource({
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
+    entities: [`${__dirname}/**/database/models/*.{ts,js}`],
+	migrations: [`${__dirname}/**/database/migrations/*.{ts,js}`],
 })
 
 AppDataSource.initialize()
@@ -17,3 +19,5 @@ AppDataSource.initialize()
     .catch((err) => {
         console.error("Error during Data Source initialization", err)
     });
+
+export default AppDataSource;
