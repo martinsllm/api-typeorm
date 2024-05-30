@@ -7,8 +7,8 @@ class ProviderController {
 
     async get(req: Request, res: Response, next: NextFunction) {
         try {
-            const result = await this.providerService.get();
-            return res.json(result);
+            const { status, message } = await this.providerService.get();
+            return res.status(status).json(message);
         } catch (error) {
             next(error);
         }
@@ -16,8 +16,8 @@ class ProviderController {
 
     async create(req: Request, res: Response, next: NextFunction) {
         try {
-           await this.providerService.create(req.body);
-            return res.status(201).json();
+           const { status, message } = await this.providerService.create(req.body);
+           return res.status(status).json(message);
         } catch (error) {
             next(error);
         } 

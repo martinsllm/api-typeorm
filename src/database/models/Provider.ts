@@ -7,7 +7,7 @@ export class Provider {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ unique: true })
     name: string
 
     @OneToMany(() => Product, (product) => product.provider)
