@@ -18,6 +18,13 @@ class ProviderService {
        return resp(200, result);
     }
 
+    async getById(id: number) {
+        const result = await this.providerService.findOneBy({ id });
+        if(!result) return respM(404, 'Provider not found!')
+
+        return resp(200, result);
+    }
+
     async create(provider: IProvider) {
         const { error } = schema.provider.validate(provider);
         if(error) return respM(422, error.message);
@@ -25,6 +32,31 @@ class ProviderService {
         await this.providerService.save(provider);
         return respM(201, 'Provider created!');
     } 
+
+    async update(provider: IProvider, id: number) {
+        const { error } = schema.provider.validate(provider);
+        if(error) return respM(422, error.message);
+
+        const result = await this.getById(id);
+
+        if(result.status != 404) {
+            await this.providerService.update(id, provider);
+            result.status = 204;
+        }
+       
+        return resp(result.status, result.message);
+    } 
+
+    async delete(id: number) {
+        const result = await this.getById(id);
+
+        if(result.status != 404) {
+            await this.providerService.delete(id);
+            result.status = 204;
+        }
+       
+        return resp(result.status, result.message);
+    }
 
 }
 
