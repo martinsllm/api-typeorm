@@ -14,7 +14,11 @@ class ProviderService {
     }
 
     async get() {
-       const result = await this.providerService.find();
+       const result = await this.providerService.find({
+            relations: {
+                products: true
+            }
+       });
        return resp(200, result);
     }
 
