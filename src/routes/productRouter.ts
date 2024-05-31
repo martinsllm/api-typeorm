@@ -7,5 +7,6 @@ const productRouter = Router();
 
 productRouter.get('/', control.get.bind(control));
 productRouter.post('/', control.create.bind(control));
+productRouter.delete('/:id', control.delete.bind(control));
 
 export default productRouter;

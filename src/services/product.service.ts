@@ -20,18 +20,36 @@ class ProductService {
        return resp(200, result);
     }
 
+    async getById(id: number) {
+        const result = await this.productService.findOneBy({ id });
+        if(!result) return respM(404, 'Product not found!')
+
+        return resp(200, result);
+    }
+
     async create(product: IProduct) {
         const { error } = schema.product.validate(product);
         if(error) return respM(422, error.message);
 
-        const provider = await this.providerService.getById(product.providerId)
-        if(provider.status == 404) return respM(404, 'Provider not found!')
+        const provider = await this.providerService.getById(product.providerId);
+        if(provider.status == 404) return respM(404, 'Provider not found!');
 
         await this.productService.save({
             ...product,
             provider: provider.message!
         });
         return respM(201, 'Product created!');
+    }
+
+    async delete(id: number) {
+        const result = await this.getById(id);
+
+        if(result.status != 404) {
+            await this.productService.delete(id);
+            result.status = 204;
+        }
+
+        return respM(result.status, result.message);
     }
 
 }
