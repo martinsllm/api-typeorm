@@ -11,4 +11,9 @@ const product = joi.object({
     providerId: joi.number().required()
 });
 
-export = { provider, product };
+const user = joi.object({
+    email: joi.string().email().required(),
+    password: joi.string().min(5).required()
+})
+
+export = { provider, product, user };
