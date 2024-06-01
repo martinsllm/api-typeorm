@@ -5,6 +5,7 @@ import { resp, respM } from '../utils/resp';
 import { IUser } from '../interfaces/IUser';
 import schema from '../middlewares/validation';
 import md5 from 'md5';
+import { sign } from '../middlewares/jwt';
 
 class UserService {
 
@@ -29,6 +30,25 @@ class UserService {
         });
 
         return respM(201, 'Register completed succesfully!');
+    }
+
+    async login(body: { email: string, password: string }) {
+        const hash = md5(body.password);
+
+        const user = await this.userService.findOne({
+            where: {
+                email: body.email,
+                password: hash
+            }
+        });
+
+        if(!user) return respM(404, 'User not found!');
+
+        const { id, email } = user;
+        const token = sign({ id, email });
+        
+        return resp(201, { id, email, token });
+
     }
 
 }
